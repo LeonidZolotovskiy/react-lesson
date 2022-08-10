@@ -7,29 +7,14 @@ import MyInput from "./components/UI/input/MyInput";
 import PostFilter from "./components/PostFilter";
 import MyModal from "./components/UI/modal/MyModal";
 import MyButton from "./components/UI/button/MyButton";
+import {usePosts} from "./components/hooks/usePosts";
 
 
 function App() {
-    const [posts, setPosts] = useState([
-        {id: 1, title: "аа", body: "бб"},
-        {id: 2, title: "гг", body: "аа"},
-        {id: 3, title: "вв", body: "яя"},
-    ])
-
+    const [posts, setPosts] = useState([])
     const [filter, setFilter] = useState({sort: '', query: ''})
-    const [modal, setModal]=useState(false)
-
-
-    const sortedPosts = useMemo(() => {
-        if (filter.sort) {
-            return [...posts].sort((a, b) => a[filter.sort].localeCompare(b[filter.sort]))
-        }
-        return posts
-    }, [filter.sort, posts])
-
-    const sortedAndSearchedPosts = useMemo(() => {
-        return sortedPosts.filter(post => post.title.toLowerCase().includes(filter.query))
-    }, [filter.query, sortedPosts])
+    const [modal, setModal] = useState(false)
+    const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query)
 
     const createPost = (newPost) => {
         setPosts([...posts, newPost])
@@ -43,7 +28,7 @@ function App() {
     return (
         <div className="App">
             <MyButton
-                style={{marginTop:30}}
+                style={{marginTop: 30}}
                 onClick={() => setModal(true)}>
                 Создать пользователя
             </MyButton>
